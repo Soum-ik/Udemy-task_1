@@ -1,25 +1,40 @@
 import { useState } from "react";
 import TagButton from "./TagButton";
 
-const Header = () => {
+const Header = ({ setTasks }) => {
   const [taskData, setTaskData] = useState({
     task: "",
     status: "todo",
+    tags: [],
   });
 
-  console.log(taskData);
   function handleChange(e) {
     const { name, value } = e.target;
-    setTaskData((prevTaskData) => ({
-      ...prevTaskData,
-      [name]: value,
-    }));
+    setTaskData((prev) => {
+      return { ...prev, [name]: value };
+    });
   }
 
-  function handleSubmit() {
-    e.preventDefault()
-    console.log(taskData);
+  function handleSubmit(e) {
+    e.preventDefault();
+    setTasks((prev) => {
+      return [...prev, taskData];
+    });
   }
+
+  function selectTag(tag) {
+    if (taskData.tags.some((item) => item === tag)) {
+      const filterTags = taskData.tags.filter((item) => item !== tag);
+      setTaskData((prev) => {
+        return { ...prev, tags: filterTags };
+      });
+    } else {
+      setTaskData((prev) => {
+        return { ...prev, tags: [...prev.tags, tag] };
+      });
+    }
+  }
+
 
   return (
     <div className=" flex items-center flex-col justify-center pt-10 pb-10 ">
@@ -33,10 +48,10 @@ const Header = () => {
         />
         <div className=" grid grid-cols-3 gap-4 pt-5 ">
           <div className=" grid grid-flow-col gap-1 col-span-2 cursor-pointer">
-            <TagButton tagName={"HTML"} />
-            <TagButton tagName={"CSS"} />
-            <TagButton tagName={"JAVASCRIPT"} />
-            <TagButton tagName={"REACT"} />
+            <TagButton selectTag={selectTag} tagName={"HTML"} />
+            <TagButton selectTag={selectTag} tagName={"CSS"} />
+            <TagButton selectTag={selectTag} tagName={"JAVASCRIPT"} />
+            <TagButton selectTag={selectTag} tagName={"REACT"} />
           </div>
           <div className=" col-span-1 absolute  right-0 cursor-pointer">
             <select
@@ -44,7 +59,7 @@ const Header = () => {
               name="status"
               className=" outline-none border py-2 px-3 rounded-md"
             >
-              <option value="To Do">To Do</option>
+              <option value="To do">To do</option>
               <option value="Done">Done</option>
               <option value="Doing">Doing</option>
             </select>
