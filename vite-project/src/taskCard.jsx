@@ -13,7 +13,9 @@ const TaskCard = ({ title, tags }) => {
 
           {/* <TagButton tagName={"CSS"} /> */}
         </div>
-        <MdDeleteForever color={"red"} size={30} />
+        <div>
+          <MdDeleteForever color={"red"} size={30} />
+        </div>
       </div>
     </article>
   );
